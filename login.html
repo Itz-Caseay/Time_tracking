@@ -21,9 +21,9 @@
       <h1>Login</h1>
       <center><div class="underline"></div></center>
     </div>
-    <form action="" method="post">
-      <input type="text" placeholder="Username" required />
-      <input type="password" placeholder="Password" required />
+    <form action="" method="post" id="login-form" autocomplete="on">
+      <input type="text" placeholder="Username" id="username" required />
+      <input type="password" placeholder="Password" id="password" required />
       <div class="remember-me"><input type="checkbox" checked name="" id=""> Remember Me</div>
       <button type="submit">Login</button>
       <div class="link">
@@ -34,7 +34,49 @@
       <p>If you don't have an account. <a href="./signup.html">click here!</a></p>
     </div>
   </body>
-  <footer>
+<script>
+  //Dom elemnts
+const loginForm=document.getElementById('login-form')
+
+
+
+const signupForm=document.getElementById('signup-form')
+const users= JSON.parse(localStorage.getItem('checked')) || []
+console.log(users)
+let currentUser=null
+
+document.addEventListener('DOMContentLoaded', () => {
+    //logging user
+
+    loginForm.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        try {
+            if (!username || !password) {
+                throw new Error('All fields are required');
+            }
+            const userFound = users.find(user => user.username === username && user.password === password);
+            if (userFound) {
+                currentUser = userFound;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                alert('Login successful');
+                window.location.href = './index.html'; 
+            } else {
+                alert('Invalid credentials');
+            }
+        }catch(error){
+            console.log(error)
+        }
+    })
+
+    
+  });
+
+
+
+
+</script>  <footer>
     Time tracker &copy; 2025 | All rights reserved.
   </footer>
 </html>

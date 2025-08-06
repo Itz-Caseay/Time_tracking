@@ -73,19 +73,9 @@
     <div class="card">
       <h2> User Panel</h2>
       <select id="user">
-        <option value="">-- Select User --</option>
-        <option value="Alice">Alice</option>
-        <option value="Bob">Bob</option>
-        <option value="Charlie">Charlie</option>
-         <option value="John">John</option>
-        <option value="Michael">Michael</option>
-        <option value="Donald">Donald</option>
-        <option value="Laura">Laura</option>
-        <option value="Steward">Steward</option>
-        <option value="Carolline">Caroliine</option>
-         <option value="Jane">Jane</option>
-        <option value="Andersone">Andersone</option>
-        <option value="Peter">Peter</option>
+        
+        <option value="" id="user-option"></option>
+        
       </select>
 
       <button id="checkBtn">Check In</button>
@@ -145,8 +135,30 @@
       <button onclick="Signout()">Sign Out</button>
     </div>
   </main>
+  
 
   <script>
+    const user = document.getElementById('user-option');
+    //check if user is created and set user details
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'))|| null;
+    console.log(currentUser)
+    if (!currentUser) {
+      alert('user not found')
+      window.location.href = "./login.html";
+    }
+    user.value=currentUser.username
+    user.textContent=currentUser.username
+    const Signout = () => {
+      
+      if (confirm("Are you sure you want to sign out?")) {
+        localStorage.removeItem('currentUser')
+        currentUser=null
+        window.location.href = "./login.html";
+      }
+    };
+    
+   
+
     const checkBtn = document.getElementById('checkBtn');
     const timerEl = document.getElementById('timer');
     const userSelect = document.getElementById('user');

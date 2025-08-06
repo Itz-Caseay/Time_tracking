@@ -123,6 +123,14 @@ a {
   justify-content: flex-end;
 }
 
+new{
+    color: #000;
+    bottom: 0;
+    p{
+        color: #000;
+    }
+}
+
 .new1 {
   color: #000;
   a {
