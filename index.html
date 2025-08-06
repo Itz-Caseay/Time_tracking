@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Co-Working Space Shift Tracker</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+    }
+    select, button, input[type="time"] {
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      width: 100%;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+    .timer {
+      font-size: 2rem;
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: bold;
+    }
+    .logs {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #d1d5db;
+      padding: 1rem;
+      font-size: 0.9rem;
+      background: #f9fafb;
+    }
+    .section {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>Co-Working Space Shift & Time Tracker</header>
+  <main>
+    <div class="card">
+      <h2> User Panel</h2>
+      <select id="user">
+        <option value="">-- Select User --</option>
+        <option value="Alice">Alice</option>
+        <option value="Bob">Bob</option>
+        <option value="Charlie">Charlie</option>
+         <option value="John">John</option>
+        <option value="Michael">Michael</option>
+        <option value="Donald">Donald</option>
+        <option value="Laura">Laura</option>
+        <option value="Steward">Steward</option>
+        <option value="Carolline">Caroliine</option>
+         <option value="Jane">Jane</option>
+        <option value="Andersone">Andersone</option>
+        <option value="Peter">Peter</option>
+      </select>
+
+      <button id="checkBtn">Check In</button>
+      <div class="timer" id="timer">00:00:00</div>
+
+      <h3> Assign Shift</h3>
+      <input type="time" id="shiftStart" />
+      <input type="time" id="shiftEnd" />
+      <button onclick="saveShift()">Save Shift</button>
+
+      <h3> Book Room & Desk</h3>
+      <select id="deskSelect">
+        <option value="Room A">Room A</option>
+        <option value="Desk 1">Desk 1</option>
+        <option value="Desk 2">Desk 2</option>
+        <option value="Desk 3">Desk 3</option>
+        <option value="Desk 4">Desk 4</option>
+        <option value="Desk 5">Desk 5</option>
+        <option value="Desk 6">Desk 6</option>
+        <option value="Desk 7">Desk 7</option>
+        <option value="Room B">Room B</option>
+        <option value="Desk 1">Desk 1</option>
+        <option value="Desk 2">Desk 2</option>
+        <option value="Desk 3">Desk 3</option>
+        <option value="Desk 4">Desk 4</option>
+        <option value="Desk 5">Desk 5</option>
+        <option value="Desk 6">Desk 6</option>
+        <option value="Desk 7">Desk 7</option>
+        <option value="Room C">Room C</option>
+        <option value="Desk 1">Desk 1</option>
+        <option value="Desk 2">Desk 2</option>
+        <option value="Desk 3">Desk 3</option>
+        <option value="Desk 4">Desk 4</option>
+        <option value="Desk 5">Desk 5</option>
+        <option value="Desk 6">Desk 6</option>
+        <option value="Desk 7">Desk 7</option>
+        <option value="Room D">Room D</option>
+        <option value="Desk 1">Desk 1</option>
+        <option value="Desk 2">Desk 2</option>
+        <option value="Desk 3">Desk 3</option>
+        <option value="Desk 4">Desk 4</option>
+        <option value="Desk 5">Desk 5</option>
+        <option value="Desk 6">Desk 6</option>
+        <option value="Desk 7">Desk 7</option>
+      </select>
+      <button onclick="bookDesk()">Book</button>
+
+      <h3> Generate Report</h3>
+      <button onclick="downloadReport()">Download Report</button>
+
+      <div class="logs" id="logArea"></div>
+    </div>
+
+    <div class="card">
+      <h2> Booked Shifts & Desks</h2>
+      <ul id="summaryList"></ul>
+      <button onclick="Signout()">Sign Out</button>
+    </div>
+  </main>
+
+  <script>
+    const checkBtn = document.getElementById('checkBtn');
+    const timerEl = document.getElementById('timer');
+    const userSelect = document.getElementById('user');
+    const logArea = document.getElementById('logArea');
+    const summaryList = document.getElementById('summaryList');
+    const deskSelect = document.getElementById('deskSelect');
+
+    let isCheckedIn = false;
+    let startTime = null;
+    let timerInterval = null;
+    const sessions = JSON.parse(localStorage.getItem('sessions')) || [];
+
+    const formatTime = ms => {
+      const s = Math.floor(ms / 1000);
+      const h = String(Math.floor(s / 3600)).padStart(2, '0');
+      const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+      const sec = String(s % 60).padStart(2, '0');
+      return `${h}:${m}:${sec}`;
+    };
+
+    const updateTimer = () => {
+      const now = new Date();
+      const diff = now - startTime;
+      timerEl.textContent = formatTime(diff);
+    };
+
+    const log = (msg) => {
+      const time = new Date().toLocaleTimeString();
+      logArea.innerHTML = `<div>[${time}] ${msg}</div>` + logArea.innerHTML;
+      showNotification(msg);
+    };
+
+    const showNotification = (message) => {
+      if (Notification.permission === "granted") {
+        new Notification("Shift Tracker", { body: message });
+      }
+    };
+
+    const saveSessionAsync = async (session) => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          sessions.push(session);
+          localStorage.setItem('sessions', JSON.stringify(sessions));
+          resolve();
+        }, 300); // simulate async write
+      });
+    };
+
+    const renderSummary = () => {
+      summaryList.innerHTML = '';
+      sessions.slice(-10).forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = `${s.user} | ${s.duration} | ${s.desk || "No desk"}`;
+        summaryList.appendChild(li);
+      });
+    };
+
+    checkBtn.addEventListener('click', async () => {
+      const user = userSelect.value;
+      if (!user) return alert("Select a user.");
+
+      if (!isCheckedIn) {
+        isCheckedIn = true;
+        startTime = new Date();
+        checkBtn.textContent = "Check Out";
+        timerInterval = setInterval(updateTimer, 1000);
+        log(`${user} checked in.`);
+      } else {
+        isCheckedIn = false;
+        clearInterval(timerInterval);
+        const endTime = new Date();
+        const durationMs = endTime - startTime;
+        const duration = formatTime(durationMs);
+        const desk = localStorage.getItem(`${user}_desk`) || null;
+
+        const session = {
+          user,
+          duration,
+          desk,
+          timestamp: new Date().toISOString()
+        };
+        await saveSessionAsync(session);
+        renderSummary();
+        log(`${user} checked out. Duration: ${duration}`);
+        timerEl.textContent = "00:00:00";
+        checkBtn.textContent = "Check In";
+      }
+    });
+
+    const saveShift = () => {
+      const user = userSelect.value;
+      if (!user) return alert("Select user");
+      const start = document.getElementById("shiftStart").value;
+      const end = document.getElementById("shiftEnd").value;
+      localStorage.setItem(`${user}_shift`, JSON.stringify({ start, end }));
+      log(`Shift saved for ${user}: ${start} - ${end}`);
+    };
+
+    const bookDesk = () => {
+      const user = userSelect.value;
+      const desk = deskSelect.value;
+      if (!user) return alert("Select user");
+      localStorage.setItem(`${user}_desk`, desk);
+      log(`${user} booked ${desk}`);
+    };
+
+    const downloadReport = () => {
+      const csv = sessions.map(s => `${s.user},${s.duration},${s.desk || ''},${s.timestamp}`).join("\n");
+      const blob = new Blob(["User,Duration,Desk,Timestamp\n" + csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "shift_report.csv";
+      a.click();
+    };
+
+    // Ask for notification permission
+    if (Notification && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+
+    renderSummary();
+  </script>
+</body>
+</html>

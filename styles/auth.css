@@ -1,0 +1,213 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #2563eb;
+  color: white;
+  justify-content: center;
+  text-align: center;
+}
+
+.title {
+  margin-top: 20px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.5rem;
+  color: #fff;
+
+  .underline {
+    width: 60px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50px;
+    top: 0;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  justify-self: center;
+  margin-top: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.5);
+  width: 45%;
+  background: #fff;
+  height: 80vh;
+
+  input {
+    width: 65%;
+    height: 60px;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #2563eb;
+    /* border-radius: 10px; */
+    border-top-left-radius: 25px;
+    font-family: "Cormorant Garamond", serif;
+    border-bottom-right-radius: 25px;
+    color: #2563eb;
+    outline: none;
+
+    ::placeholder {
+      color: #2563eb;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 500;
+    }
+  }
+
+  button {
+    width: 65%;
+    height: 60px;
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    font-family: "Cormorant Garamond", serif;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #1d4ed8; /* Darker shade on hover */
+    }
+  }
+  i {
+    color: #2563eb;
+  }
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+  align-self: baseline;
+  margin-left: 100px;
+
+  input {
+    margin-right: 5px;
+    cursor: pointer;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #2563eb;
+    font-size: 10px;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+
+  &:hover {
+    color: #fff; /* Change color on hover */
+    transition: 0.9s ease-in-out;
+  }
+}
+
+.link {
+  display: flex;
+  color: #1d4ed8;
+  gap: 5px;
+  justify-content: flex-end;
+}
+
+.new1 {
+  color: #000;
+  a {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 500;
+    &:hover {
+      color: #000; /* Change color on hover */
+      transition: 0.9s ease-in-out;
+    }
+  }
+}
+
+footer {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  form {
+    margin-top: 75px;
+    width: 90%;
+    height: 45vh;
+    gap: 0;
+    input {
+      height: 40px;
+    }
+    button {
+      height: 35px;
+      border-top-right-radius: 15px;
+      border-bottom-left-radius: 15px;
+      display: flex;
+      justify-content: center;
+      justify-items: center;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .remember-me {
+      margin-left: 0;
+      justify-content: center;
+      margin-top: 10px;
+      display: none;
+    }
+  }
+
+  .link {
+    font-size: 10px;
+  }
+
+  footer {
+    width: 100%;
+    padding: 10px;
+    position: fixed;
+    justify-items: center;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    color: #fff;
+    bottom: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: #000;
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 500;
+
+    &:hover {
+      color: #fff; /* Change color on hover */
+      transition: 0.9s ease-in-out;
+    }
+  }
+
+  .new1 {
+    color: #000;
+    font-size: 12px;
+    font-family: "Cormorant Garamond", serif;
+    a {
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: 500;
+      &:hover {
+        color: #000; /* Change color on hover */
+        transition: 0.9s ease-in-out;
+      }
+    }
+  }
+}
